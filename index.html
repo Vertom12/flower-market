@@ -434,18 +434,23 @@ function todayIso(){
 
 /* ---------------- Storage ---------------- */
 async function loadAllOrders(){
-  try{
-    var res = await window.storage.get("orders", true);
-    if (res && res.value) return JSON.parse(res.value);
-    return [];
-  } catch(e){
-    return []; // clé pas encore créée = aucune commande
-  }
+    try {
+        var data = localStorage.getItem("orders");
+        return data ? JSON.parse(data) : [];
+    } catch(e) {
+        console.error(e);
+        return [];
+    }
 }
+
 async function saveAllOrders(orders){
-  var res = await window.storage.set("orders", JSON.stringify(orders), true);
-  if (!res) throw new Error("save-failed");
-  return res;
+    try {
+        localStorage.setItem("orders", JSON.stringify(orders));
+        return true;
+    } catch(e) {
+        console.error(e);
+        throw e;
+    }
 }
 
 /* ---------------- Rendering ---------------- */
